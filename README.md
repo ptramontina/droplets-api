@@ -7,6 +7,6 @@ API to manage devices using MQTT protocol.
 ## Development process
 
 ```
-cp .env.example .env
+cp config/.env.example config/.env
 npm run dev
 ```
