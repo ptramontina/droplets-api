@@ -40,7 +40,10 @@ const deviceSchema = new mongoose.Schema({
         ref: 'User'
     }
 }, {
-    timestamps: true
+    timestamps: true,
+    id: false,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
 })
 
 deviceSchema.index({ code: 1, owner: 1 }, { unique: true })
@@ -53,6 +56,10 @@ deviceSchema.methods.getPath = async function () {
     await device.populate('group').execPopulate()
     return await device.group.getPath() + '/' + device.code
 }
+
+deviceSchema.virtual('mqttPath').get(function () {
+    return this._id + '/api'
+})
 
 deviceSchema.statics.handleMessage = async (_id, data) => {
     const device = await Device.findOne({ _id })
@@ -78,9 +85,8 @@ deviceSchema.statics.handleMessage = async (_id, data) => {
     }
 }
 
-deviceSchema.post('save', async function (next) {
+deviceSchema.post('save', async function (device, next) {
     try {
-        const device = this
         const path = await device._id + '/api'
 
         mqttClient.subscribe(path)

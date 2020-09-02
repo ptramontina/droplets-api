@@ -32,6 +32,10 @@ router.get('/devices', auth, async (req, res) => {
         match.group = req.query.group
     }
 
+    if (req.query.code) {
+        match.code = req.query.code
+    }
+
     if (req.query.sortBy) {
         const parts = req.query.sortBy.split(':')
         sort[parts[0]] = parts[1] === 'desc' ? -1 : 1
