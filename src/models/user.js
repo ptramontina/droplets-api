@@ -30,13 +30,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         minlength: 7,
-        trim: true,
-        validate: {
-            validator (v) {
-                return !v.toLowerCase().includes('password')
-            },
-            message: 'Password cannot contain "password"'
-        }
+        trim: true
     },
     tokens: [{
         token: {
